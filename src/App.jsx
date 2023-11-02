@@ -1,9 +1,22 @@
-import { useState } from "react";
 import datas from "./data/data.json";
 import ImageCard from "./components/ImageCard";
+import { useState } from "react";
 
 function App() {
   const [data, setData] = useState(datas);
+  const [selectedImages, setSelectedImages] = useState([]);
+
+  console.log(selectedImages.length);
+
+  const handleSelectionChange = (isSelected, imageURL) => {
+    setSelectedImages((prevSelected) => {
+      if (isSelected) {
+        return [...prevSelected, imageURL];
+      } else {
+        return prevSelected.filter((image) => image !== imageURL);
+      }
+    });
+  };
 
   return (
     <div className="bg-slate-200 h-screen">
@@ -11,7 +24,13 @@ function App() {
         <div className="bg-white w-[600px]">
           <div>
             <div className="flex justify-between mx-5 py-3">
-              <h2>Gallery</h2>
+              <div>
+                {selectedImages.length > 0 ? (
+                  <h1>{selectedImages.length} File Selecter</h1>
+                ) : (
+                  <h1>Gallery</h1>
+                )}
+              </div>
               <h2>Delete Image</h2>
             </div>
             <hr />
@@ -21,6 +40,7 @@ function App() {
                   key={imgData.id}
                   image={imgData.image}
                   index={index}
+                  handleSelection={handleSelectionChange}
                 />
               ))}
             </div>
