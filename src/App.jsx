@@ -1,7 +1,7 @@
 import datas from "./data/data.json";
 import ImageCard from "./components/ImageCard";
 import { useState } from "react";
-import { DndContext, closestCenter } from "@dnd-kit/core";
+import { DndContext, DragOverlay, closestCenter } from "@dnd-kit/core";
 import {
   SortableContext,
   arrayMove,
@@ -11,6 +11,7 @@ import {
 function App() {
   const [data, setData] = useState(datas);
   const [selectedImages, setSelectedImages] = useState([]);
+  const [activeId, setActiveId] = useState(null);
 
   const handleSelectionChange = (isSelected, imageId) => {
     setSelectedImages((prevSelected) => {
@@ -31,6 +32,10 @@ function App() {
 
   // Handle drag and drop
 
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
+  };
+
   const handleDragEnd = (event) => {
     const { active, over } = event;
     if (active.id !== over.id) {
@@ -41,6 +46,10 @@ function App() {
         return arrayMove(items, preIndex, nextIndex);
       });
     }
+    setActiveId(null);
+  };
+  const handleDragCancel = () => {
+    setActiveId(null);
   };
 
   return (
@@ -83,7 +92,9 @@ function App() {
 
             <DndContext
               collisionDetection={closestCenter}
+              onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
+              onDragCancel={handleDragCancel}
             >
               <SortableContext items={data} strategy={rectSortingStrategy}>
                 <div className="grid grid-cols-5 gap-2 p-6">
@@ -99,6 +110,11 @@ function App() {
                   ))}
                 </div>
               </SortableContext>
+              {/* <DragOverlay adjustScale={true}>
+                {activeId ? (
+                  <ImageCard image={activeId} index={data.indexOf(activeId)} />
+                ) : null}
+              </DragOverlay> */}
             </DndContext>
           </div>
         </div>

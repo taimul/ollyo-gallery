@@ -7,11 +7,14 @@ const ImageCard = (props) => {
   const sortable = useSortable({ id });
 
   const { attributes, listeners, setNodeRef, transform, transition } = sortable;
-  const style = {
-    // transform: transform ? `translate(${transform.x}px, ${transform.y}px` : "",
-    transform: CSS.Transform.toString(transform),
 
+  const style = {
+    transform: CSS.Transform.toString(transform),
     transition,
+  };
+  const inlineStyle = {
+    transformOrigin: "0 0",
+    ...style,
   };
 
   const toggleSelected = () => {
@@ -20,35 +23,39 @@ const ImageCard = (props) => {
 
   return (
     <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      className={` relative group z-30 overflow-auto ${
+      className={`border rounded-lg ${
         index === 0 ? "col-span-2 row-span-2" : null
       }`}
     >
-      <div {...listeners} className="relative overflow-hidden rounded-lg">
-        <img
-          src={image}
-          alt=""
-          className={`border-2 ${selected ? "opacity-50" : ""}`}
-        />
-        <div
-          className={`${
-            selected
-              ? ""
-              : "h-80 w-80 bg-gray-900 opacity-0 group-hover:opacity-50 absolute top-0 "
+      <div
+        ref={setNodeRef}
+        style={inlineStyle}
+        {...attributes}
+        className={` relative group z-30 overflow-auto`}
+      >
+        <div {...listeners} className="relative overflow-hidden rounded-lg">
+          <img
+            src={image}
+            alt=""
+            className={` ${selected ? "opacity-50" : ""}`}
+          />
+          <div
+            className={`${
+              selected
+                ? ""
+                : "h-80  w-80 bg-gray-900 opacity-0 group-hover:opacity-50 absolute top-0 "
+            }`}
+          ></div>
+        </div>
+        <input
+          onChange={toggleSelected}
+          type="checkbox"
+          className={`absolute top-3 left-3  opacity-0 group-hover:opacity-100 ${
+            selected ? "opacity-100" : ""
           }`}
-        ></div>
+          checked={selected}
+        />
       </div>
-      <input
-        onChange={toggleSelected}
-        type="checkbox"
-        className={`absolute top-3 left-3  opacity-0 group-hover:opacity-100 ${
-          selected ? "opacity-100" : ""
-        }`}
-        checked={selected}
-      />
     </div>
   );
 };
