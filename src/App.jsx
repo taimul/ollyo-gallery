@@ -6,8 +6,6 @@ function App() {
   const [data, setData] = useState(datas);
   const [selectedImages, setSelectedImages] = useState([]);
 
-  console.log(selectedImages.length);
-
   const handleSelectionChange = (isSelected, imageURL) => {
     setSelectedImages((prevSelected) => {
       if (isSelected) {
@@ -16,6 +14,10 @@ function App() {
         return prevSelected.filter((image) => image !== imageURL);
       }
     });
+  };
+  const handleDelete = () => {
+    setData(data.filter((imgData) => !selectedImages.includes(imgData.image)));
+    setSelectedImages([]);
   };
 
   return (
@@ -26,12 +28,20 @@ function App() {
             <div className="flex justify-between mx-5 py-3">
               <div>
                 {selectedImages.length > 0 ? (
-                  <h1>{selectedImages.length} File Selecter</h1>
+                  <h1>{selectedImages.length} File Selected</h1>
                 ) : (
                   <h1>Gallery</h1>
                 )}
               </div>
-              <h2>Delete Image</h2>
+              {selectedImages.length > 0 && (
+                <button onClick={handleDelete}>
+                  {selectedImages.length > 1 ? (
+                    <span>Delete Files</span>
+                  ) : (
+                    <span>Delete File</span>
+                  )}
+                </button>
+              )}
             </div>
             <hr />
             <div className="grid grid-cols-5 gap-2 p-6">
