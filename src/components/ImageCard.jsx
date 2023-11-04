@@ -5,7 +5,6 @@ const ImageCard = (props) => {
   const { id, selected, image, index, handleSelection } = props;
 
   const sortable = useSortable({ id });
-
   const { attributes, listeners, setNodeRef, transform, transition } = sortable;
 
   const style = {
@@ -31,7 +30,7 @@ const ImageCard = (props) => {
         ref={setNodeRef}
         style={inlineStyle}
         {...attributes}
-        className={` relative group z-30 h-full w-full`}
+        className={` relative group z-30 h-full`}
       >
         <div
           {...listeners}
