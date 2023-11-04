@@ -43,7 +43,7 @@ const ImageCard = (props) => {
             className={`${
               selected
                 ? ""
-                : "h-80  w-80 bg-gray-900 opacity-0 group-hover:opacity-50 absolute top-0 "
+                : "h-80  w-80 bg-gray-900 opacity-0 group-hover:opacity-50 absolute top-0 duration-500"
             }`}
           ></div>
         </div>

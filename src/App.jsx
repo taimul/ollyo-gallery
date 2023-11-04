@@ -53,9 +53,9 @@ function App() {
   };
 
   return (
-    <div className="bg-slate-200 h-screen">
+    <div className="bg-slate-200 h-full">
       <div className="flex justify-center items-center h-screen">
-        <div className="bg-white w-[800px]">
+        <div className="bg-white w-[450px] sm:w-[600px] lg:w-[800px] mx-4">
           <div>
             <div className="flex justify-between mx-5 py-3">
               <div>
@@ -72,7 +72,7 @@ function App() {
                     Files Selected
                   </h1>
                 ) : (
-                  <h1>Gallery</h1>
+                  <h1 className="font-semibold">Gallery</h1>
                 )}
               </div>
               {selectedImages.length > 0 && (
@@ -97,7 +97,7 @@ function App() {
               onDragCancel={handleDragCancel}
             >
               <SortableContext items={data} strategy={rectSortingStrategy}>
-                <div className="grid grid-cols-5 gap-2 p-6">
+                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-6">
                   {data.map((imgData, index) => (
                     <ImageCard
                       key={imgData.id}
@@ -108,13 +108,9 @@ function App() {
                       selected={selectedImages.includes(imgData.id)}
                     />
                   ))}
+                  <div className="w-auto h-auto border"></div>
                 </div>
               </SortableContext>
-              {/* <DragOverlay adjustScale={true}>
-                {activeId ? (
-                  <ImageCard image={activeId} index={data.indexOf(activeId)} />
-                ) : null}
-              </DragOverlay> */}
             </DndContext>
           </div>
         </div>
