@@ -31,13 +31,16 @@ const ImageCard = (props) => {
         ref={setNodeRef}
         style={inlineStyle}
         {...attributes}
-        className={` relative group z-30 overflow-auto`}
+        className={` relative group z-30 h-full w-full`}
       >
-        <div {...listeners} className="relative overflow-hidden rounded-lg">
+        <div
+          {...listeners}
+          className="relative overflow-hidden rounded-lg h-full"
+        >
           <img
             src={image}
             alt=""
-            className={` ${selected ? "opacity-50" : ""}`}
+            className={`h-full w-full ${selected ? "opacity-50" : ""}`}
           />
           <div
             className={`${
@@ -50,8 +53,8 @@ const ImageCard = (props) => {
         <input
           onChange={toggleSelected}
           type="checkbox"
-          className={`absolute top-3 left-3  opacity-0 group-hover:opacity-100 ${
-            selected ? "opacity-100" : ""
+          className={`absolute top-3 left-3 lg:opacity-0 lg:group-hover:opacity-100 z-50 ${
+            selected ? "!opacity-100" : ""
           }`}
           checked={selected}
         />

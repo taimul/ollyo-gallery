@@ -1,7 +1,13 @@
-import datas from "./data/data.json";
 import ImageCard from "./components/ImageCard";
-import { useState } from "react";
-import { DndContext, DragOverlay, closestCenter } from "@dnd-kit/core";
+import { useEffect, useState } from "react";
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
   SortableContext,
   arrayMove,
@@ -9,9 +15,20 @@ import {
 } from "@dnd-kit/sortable";
 
 function App() {
-  const [data, setData] = useState(datas);
+  const [data, setData] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
-  const [activeId, setActiveId] = useState(null);
+  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+
+  useEffect(() => {
+    fetch("/data.json")
+      .then((response) => response.json())
+      .then((data) => {
+        setData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
   const handleSelectionChange = (isSelected, imageId) => {
     setSelectedImages((prevSelected) => {
@@ -29,13 +46,20 @@ function App() {
     setData(data.filter((imgData) => !selectedImages.includes(imgData.id)));
     setSelectedImages([]);
   };
+  const handleUpload = (event) => {
+    const files = event.target.files;
 
-  // Handle drag and drop
+    // Create new data items for the uploaded files
+    const newImageData = Array.from(files).map((file, index) => ({
+      id: data.length + index + 1, // Generate a unique ID
+      image: URL.createObjectURL(file),
+    }));
 
-  const handleDragStart = (event) => {
-    setActiveId(event.active.id);
+    // Update the data state with the new image data
+    setData((prevData) => [...prevData, ...newImageData]);
   };
 
+  // Handle drag and drop
   const handleDragEnd = (event) => {
     const { active, over } = event;
     if (active.id !== over.id) {
@@ -46,10 +70,6 @@ function App() {
         return arrayMove(items, preIndex, nextIndex);
       });
     }
-    setActiveId(null);
-  };
-  const handleDragCancel = () => {
-    setActiveId(null);
   };
 
   return (
@@ -91,10 +111,9 @@ function App() {
             <hr />
 
             <DndContext
+              sensors={sensors}
               collisionDetection={closestCenter}
-              onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
-              onDragCancel={handleDragCancel}
             >
               <SortableContext items={data} strategy={rectSortingStrategy}>
                 <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-6">
@@ -108,7 +127,27 @@ function App() {
                       selected={selectedImages.includes(imgData.id)}
                     />
                   ))}
-                  <div className="w-auto h-auto border"></div>
+                  <div className="w-auto h-auto border-2 border-dashed text-center">
+                    <label className=" inset-0 cursor-pointer">
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="image/*"
+                        multiple
+                        onChange={handleUpload}
+                      />
+                      <div className="flex flex-col items-center justify-center h-full py-6 md:py-10 ">
+                        <img
+                          src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Picture_icon_BLACK.svg"
+                          alt=""
+                          className="w-4 h-4 mb-3"
+                        />
+                        <p className="font-semibold text-xs lg:text-base">
+                          Add Images
+                        </p>
+                      </div>
+                    </label>
+                  </div>
                 </div>
               </SortableContext>
             </DndContext>
