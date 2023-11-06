@@ -1,6 +1,6 @@
 # Image Gallery
 
-- [Live link](https://ollyo-gallery-psi.vercel.app/)
+- [Live link](https://olly0-gallery.netlify.app/)
 
 # Fetures Used
 
